@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 from datetime import datetime
+from typing import Tuple
 import os
 import numpy as np
  
@@ -116,7 +117,7 @@ def log_sell(ticker: str, shares: float, price:float, cost:float, pnl:float, por
 
 # === Manual Buy Logger ===
 
-def log_manual_buy(buy_price: float, shares: float, ticker: str, stoploss: float, cash: float, chatgpt_portfolio: pd.DataFrame) -> tuple[float, pd.DataFrame]: 
+def log_manual_buy(buy_price: float, shares: float, ticker: str, stoploss: float, cash: float, chatgpt_portfolio: pd.DataFrame) -> Tuple[float, pd.DataFrame]: 
     check = input(f"""You are currently trying to buy {ticker}.
                    If this a mistake enter 1.""")
     if check == "1":
@@ -155,7 +156,7 @@ def log_manual_buy(buy_price: float, shares: float, ticker: str, stoploss: float
     print(f"Manual buy for {ticker} complete!")
     return cash, chatgpt_portfolio
 
-def log_manual_sell(sell_price: float, shares_sold: float, ticker: str, cash: float, chatgpt_portfolio: dict) -> tuple[float, pd.DataFrame]:
+def log_manual_sell(sell_price: float, shares_sold: float, ticker: str, cash: float, chatgpt_portfolio: dict) -> Tuple[float, pd.DataFrame]:
 
     reason = input(f"""You are currently trying to buy {ticker}. 
 If this is a mistake, enter 1. """)
