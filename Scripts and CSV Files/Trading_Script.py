@@ -290,10 +290,14 @@ You can however use the Internet and check current prices for potenial buys.""")
 
 # === Run Portfolio ===
 
-chatgpt_portfolio = [{'ticker': 'ABEO', 'shares': 6, 'stop_loss': 4.9, 'buy_price': 5.77, 'cost_basis': 34.62},
-                    {'ticker': 'IINN', 'shares': 14, 'stop_loss': 1.1, 'buy_price': 1.5, 'cost_basis': 21.0}, 
-                    {'ticker': 'ACTU', 'shares': 6, 'stop_loss': 4.89, 'buy_price': 5.75, 'cost_basis': 34.5},
-                    ]
+chatgpt_portfolio = pd.DataFrame([
+    {"ticker": "VSTM",  "shares": 3,   "stop_loss": 5.00,  "buy_price": 6.07,  "cost_basis": 18.21},
+    {"ticker": "LIXTW", "shares": 3,   "stop_loss": 2.00,  "buy_price": 2.50,  "cost_basis": 7.50},
+    {"ticker": "RADA",  "shares": 5,   "stop_loss": 3.20,  "buy_price": 4.00,  "cost_basis": 20.00},
+    {"ticker": "CVU",   "shares": 4,   "stop_loss": 2.90,  "buy_price": 3.50,  "cost_basis": 14.00},
+    {"ticker": "AMBQ",  "shares": 1,   "stop_loss": 32.00, "buy_price": 40.00, "cost_basis": 40.00},
+    {"ticker": "MRIN",  "shares": 200, "stop_loss": 0.07,  "buy_price": 0.10,  "cost_basis": 20.00}
+])
 chatgpt_portfolio = pd.DataFrame(chatgpt_portfolio)
 cash = 22.32
 
