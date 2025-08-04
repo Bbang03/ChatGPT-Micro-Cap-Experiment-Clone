@@ -17,9 +17,9 @@ def process_portfolio(portfolio: pd.DataFrame, starting_cash: float) -> pd.DataF
         shares = int(stock["shares"])
         cost = stock["buy_price"]
         stop = stock["stop_loss"]
-        data = yf.Ticker(ticker).history(period="1d")
+        data = yf.Ticker(ticker).history(period="7d")
 
-        if data.empty:
+        if data.empty or len(data["Close"].dropna()) == 0:
             print(f"No data for {ticker}")
             row = {
                 "Date": today,
@@ -35,6 +35,7 @@ def process_portfolio(portfolio: pd.DataFrame, starting_cash: float) -> pd.DataF
                 "Total Equity": ""
             }
         else:
+            data = data.tail(1)
             price = round(data["Close"].iloc[-1], 2)
             value = round(price * shares, 2)
             pnl = round((price - cost) * shares, 2)
@@ -81,7 +82,7 @@ def process_portfolio(portfolio: pd.DataFrame, starting_cash: float) -> pd.DataF
     results.append(total_row)
 
     # === Save to CSV ===
-    file = f"Scripts and CSV Files/chatgpt_portfolio_update.csv"
+    file = f"chatgpt_portfolio_update.csv"
     df = pd.DataFrame(results)
 
     if os.path.exists(file):
@@ -106,7 +107,7 @@ def log_sell(ticker: str, shares: float, price:float, cost:float, pnl:float, por
     }
     # ensure ticker is removed
     portfolio = portfolio[portfolio['ticker'] != ticker]
-    file = f"Scripts and CSV Files/chatgpt_trade_log.csv"
+    file = f"chatgpt_trade_log.csv"
     if os.path.exists(file):
         df = pd.read_csv(file)
         df = pd.concat([df, pd.DataFrame([log])], ignore_index=True)
@@ -140,7 +141,7 @@ def log_manual_buy(buy_price: float, shares: float, ticker: str, stoploss: float
             "Reason": "MANUAL BUY - New position"
             }
 
-    file = "Scripts and CSV Files/chatgpt_trade_log.csv"
+    file = "chatgpt_trade_log.csv"
     if os.path.exists(file):
         df = pd.read_csv(file)
         df = pd.concat([df, pd.DataFrame([log])], ignore_index=True)
@@ -190,7 +191,7 @@ If this is a mistake, enter 1. """)
         "Shares Sold": shares_sold,
         "Sell Price": sell_price
     }
-    file = "Scripts and CSV Files/chatgpt_trade_log.csv"
+    file = "chatgpt_trade_log.csv"
     if os.path.exists(file):
         df = pd.read_csv(file)
         df = pd.concat([df, pd.DataFrame([log])], ignore_index=True)
@@ -225,8 +226,12 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
             if data.empty or len(data) < 2:
                 print(f"Data for {ticker} was empty or incomplete.")
                 continue
-            price = float(data['Close'].iloc[-1].item())
-            last_price = float(data['Close'].iloc[-2].item())
+            close_data = data['Close'].dropna()
+            if len(close_data) < 2:
+                print(f"{ticker} has insufficient close data.")
+                continue
+            price = close_data.iloc[-1].item()  # 또는 float(close_data.iloc[-1])
+            last_price = close_data.iloc[-2].item()  # 이것도 마찬가지
 
             percent_change = ((price - last_price) / last_price) * 100
             volume = float(data['Volume'].iloc[-1].item())
@@ -235,7 +240,7 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
         print(f"{ticker} closing price: {price:.2f}")
         print(f"{ticker} volume for today: ${volume:,}")
         print(f"percent change from the day before: {percent_change:.2f}%")
-    chatgpt_df = pd.read_csv("Scripts and CSV Files/chatgpt_portfolio_update.csv")
+    chatgpt_df = pd.read_csv("chatgpt_portfolio_update.csv")
 
     # Filter TOTAL rows and get latest equity
     chatgpt_totals = chatgpt_df[chatgpt_df['Ticker'] == 'TOTAL'].copy() 
@@ -282,7 +287,8 @@ def daily_results(chatgpt_portfolio: pd.DataFrame, cash: float) -> None:
     scaling_factor = 100 / initial_price
     spx_value = price_now * scaling_factor
     print(f"$100 Invested in the S&P 500: ${spx_value:.2f}")
-    print(f"today's portfolio: {chatgpt_portfolio}")
+    print("today's portfolio:")
+    print(chatgpt_portfolio)
     print(f"cash balance: {cash}")
 
     print("""Here are is your update for today. You can make any changes you see fit (if necessary),
@@ -291,16 +297,12 @@ You can however use the Internet and check current prices for potenial buys.""")
 
 # === Run Portfolio ===
 
-chatgpt_portfolio = pd.DataFrame([
-    {"ticker": "VSTM",  "shares": 3,   "stop_loss": 5.00,  "buy_price": 6.07,  "cost_basis": 18.21},
-    {"ticker": "LIXTW", "shares": 3,   "stop_loss": 2.00,  "buy_price": 2.50,  "cost_basis": 7.50},
-    {"ticker": "RADA",  "shares": 5,   "stop_loss": 3.20,  "buy_price": 4.00,  "cost_basis": 20.00},
-    {"ticker": "CVU",   "shares": 4,   "stop_loss": 2.90,  "buy_price": 3.50,  "cost_basis": 14.00},
-    {"ticker": "AMBQ",  "shares": 1,   "stop_loss": 32.00, "buy_price": 40.00, "cost_basis": 40.00},
-    {"ticker": "MRIN",  "shares": 200, "stop_loss": 0.07,  "buy_price": 0.10,  "cost_basis": 20.00}
-])
+chatgpt_portfolio = [{'ticker': 'ABEO', 'shares': 6, 'stop_loss': 4.9, 'buy_price': 5.77, 'cost_basis': 34.62},
+                    {'ticker': 'IINN', 'shares': 14, 'stop_loss': 1.1, 'buy_price': 1.5, 'cost_basis': 21.0}, 
+                    {'ticker': 'ACTU', 'shares': 6, 'stop_loss': 4.89, 'buy_price': 5.75, 'cost_basis': 34.5},
+                    ]
 chatgpt_portfolio = pd.DataFrame(chatgpt_portfolio)
-cash = 22.32
+
 
 # See Using Scripts.md file for details
 

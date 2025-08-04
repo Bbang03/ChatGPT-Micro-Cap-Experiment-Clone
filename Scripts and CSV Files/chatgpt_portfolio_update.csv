@@ -1,1 +1,8 @@
 Date,Ticker,Shares,Cost Basis,Stop Loss,Current Price,Total Value,PnL,Action,Cash Balance,Total Equity
+<<<<<<< HEAD
+=======
+2025-08-04,STTK,20,1.5,1.2,0.73,14.6,-15.4,SELL - Stop Loss Triggered,,
+2025-08-04,TUSK,10,5.0,4.0,2.54,25.4,-24.6,SELL - Stop Loss Triggered,,
+2025-08-04,MYPS,6,3.0,2.4,1.09,6.54,-11.46,SELL - Stop Loss Triggered,,
+2025-08-04,TOTAL,,,,,0.0,0.0,,48.54,48.54
+>>>>>>> b49fbc8 (💼 Update portfolio logic and CSV logs for 2025-08-05)
