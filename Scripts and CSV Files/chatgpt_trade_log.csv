@@ -1,7 +1,1 @@
 Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
-<<<<<<< HEAD
-=======
-2025-08-04,STTK,,,1.5,-15.4,AUTOMATED SELL - STOPLOSS TRIGGERED,20,0.73
-2025-08-04,TUSK,,,5.0,-24.6,AUTOMATED SELL - STOPLOSS TRIGGERED,10,2.54
-2025-08-04,MYPS,,,3.0,-11.46,AUTOMATED SELL - STOPLOSS TRIGGERED,6,1.09
->>>>>>> b49fbc8 (💼 Update portfolio logic and CSV logs for 2025-08-05)
